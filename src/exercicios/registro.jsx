@@ -10,12 +10,17 @@
 // o motor (jogo/Jogo.jsx) vai usar as funcoes dele
 // -------------------------
 
-// traz o modulo dos exercicios, por enquanto so temos multipla escolha
+// traz os modulos dos tipos de exercicio (cada um e um arquivo)
 import multipla from './multipla.jsx'
+import saidaMultipla from './saidaMultipla.jsx' // prever a saida (caixas de texto)
+import lacuna from './lacuna.jsx' // preencher a lacuna no meio do codigo
+import contrastantes from './contrastantes.jsx' // escolher entre versoes quase iguais
+import parsons from './parsons.jsx' // reordenar as linhas arrastando
+import associacao from './associacao.jsx' // ligar com fios (arrastar)
 
 // mapa: liga o NOME do tipo (a chave) ao modulo que sabe trata-lo.
 // a chave 'multipla' TEM que ser igual ao campo tipo dos dados (tipo: 'multipla')
-const REGISTRO = { multipla }
+const REGISTRO = { multipla, saidaMultipla, lacuna, contrastantes, parsons, associacao }
 
 export default REGISTRO
 

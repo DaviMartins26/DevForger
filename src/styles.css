@@ -2,3 +2,61 @@ body {
   margin: 0;
   font-family: system-ui, sans-serif;
 }
+
+/* ---- fios (tipo associacao): duas colunas + fios em SVG por cima ---------- */
+/* o container e "relative" pra o SVG e as portas serem medidos em relacao a ele */
+.fios {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  max-width: 360px;
+  margin: 8px 0;
+  user-select: none; /* nao deixa o texto ficar selecionado (azul) ao arrastar os fios */
+}
+/* o SVG cobre o container inteiro, por cima das colunas */
+.fios-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* deixa o clique passar pras portas que estao embaixo */
+}
+.fios-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.fios-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* na esquerda, o rotulo vem antes e a porta fica na beirada (perto do centro) */
+.fios-esq .fios-row {
+  justify-content: flex-end;
+}
+/* a "porta" e uma bolinha que da pra agarrar */
+.fios-porta {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #888;
+  background: #fff;
+  cursor: grab;
+  flex: none;
+}
+.fios-ligada {
+  background: #35d6e8; /* porta ja ligada fica preenchida */
+}
+.fio {
+  stroke: #666;
+  stroke-width: 2;
+}
+.fio-arrasto {
+  stroke-dasharray: 5; /* o fio sendo puxado fica tracejado */
+}
+.fios code,
+.fios span {
+  font-family: monospace;
+}

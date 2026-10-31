@@ -1,60 +1,132 @@
 // Trilha 1: Leitura de codigo
-// aqui sera adicionada  a estrura das trilhas devem seguir a seguinte logica a principio
-//
-// OBS (ajuste meu p/ a demo): por enquanto SO o tipo 'multipla' esta implementado.
-// Por isso pus o exercicio de multipla em PRIMEIRO, pra ele ja aparecer
-// funcionando na tela. O 'saidaMultipla' ficou em segundo e vai mostrar
-// "Tipo desconhecido" ate a gente criar esse tipo (proxima etapa). Pode reordenar
-// quando o saidaMultipla existir.
+// 6 tipos unicos de exercicios
+// 8 ao todo
+
 
 export default {
     id: 'leitura',
     titulo: 'Leitura de Codigo',
     descricao: 'Prever a saida de um programa e montar programas simples, passo a passo.',
+    // mini-aula: a Lari explica um pouco no comeco da trilha (uma frase por bolha)
     aula: [
-        'aqui deve contem uma explicacao',
-        'sobre oque seravisto',
-        'cada liha sera uma mensagem do bot'
+        'Antes de escrever codigo, o segredo e saber LER: prever o que o programa faz.',
+        'Em Python o programa roda de cima pra baixo, uma linha por vez, e o print() mostra um valor na tela.',
+        'Entao a gente so acompanha o codigo com calma e diz o que aparece. Bora!',
     ],
     exercicios: [
-        { //exemplo mais 'fiel' (tipo multipla ja funciona)
-        id: 'exe2',
-        tipo: 'multipla',
-        titulo: 'O que aparece na tela',
-        nota: 'Repara num detalhe: a virgula dentro do print separa os pedacos com um espaco, e uma variavel mostra o VALOR guardado, nao o nome dela.',
-        enunciado: 'O que este programa imprime?',
-        codigo: 'nome = "Ana"\nprint("Ola,", nome)',
-        opcoes: ['Ola, nome', 'Ola, Ana', 'Ola Ana (sem virgula)', 'nome'],
-        correta: 1,
-        dica: 'print mostra o texto e, no lugar de nome, o valor guardado na variavel.',
-        feedbackCerto: 'Isso. A virgula no print poe um espaco: "Ola, Ana".',
-        feedbackErrado: 'nome vale "Ana"; print("Ola,", nome) mostra "Ola, Ana".',
-        },
-        {
-        id:'ex1',
-        // tipo saidaMultipla ainda NAO implementado: vai aparecer "Tipo desconhecido"
+        { // 1) saidaMultipla: prever a saida de cada print
+        id: 'ex1',
         tipo: 'saidaMultipla',
-        titulo: 'duvida do exercicio',
-        //explicacao do exercicio
+        titulo: 'Prever a saida',
+        nota: 'Comecando leve: cada print mostra o resultado de uma conta. Aqui + soma e * multiplica.',
         enunciado: 'O que este programa imprime? Preencha cada saida na ordem.',
-        //codigo que sera impresso pro aluno compreender
         codigo: 'x = 5\ny = 3\nprint(x + y)\nprint(x * y)',
-        //campo que ele precisa colocar a(s) saidas
         rotulos: ['Saida 1', 'Saida 2'],
-        // respostas corras do exercico
         respostas: ['8', '15'],
-        //dica que gratuita que ele recebe apos pedir ou errar x vezes
         dica: 'Resolva cada print: primeiro x + y, depois x * y.',
-        //mensagem enviada ao acertar, pode ficar ruim em multipla escolha
         feedbackCerto: 'Isso. 5 + 3 = 8 e 5 * 3 = 15.',
-        //dica dada quando o aluno errou muitas vezes
         feedbackErrado: 'A 1a saida e 5 + 3 = 8; a 2a e 5 * 3 = 15.',
-        // resposta do bot mais bonita em chat, principalmente em multipla escolha
         gabarito: [
             'Saida 1 e Soma, entao: 5 + 3 = 8',
             'Saida 2 e Multiplicacao, entao: 5 * 3 = 15',
         ],
         },
-    ]
-
+        { // 2) contrastantes: escolher entre versoes quase iguais
+        id: 'ex2',
+        tipo: 'contrastantes',
+        titulo: 'Qual imprime com espaco',
+        nota: 'Detalhe de leitura: a virgula no print separa com um espaco; o + cola os textos direto.',
+        enunciado: 'Qual versao imprime exatamente: Ola Ana (com um espaco no meio)?',
+        versoes: [
+            { rotulo: 'Versao A', codigo: 'print("Ola", "Ana")' },
+            { rotulo: 'Versao B', codigo: 'print("Ola" + "Ana")' },
+        ],
+        correta: 0,
+        dica: 'A virgula poe um espaco entre os pedacos; o + junta sem espaco.',
+        feedbackCerto: 'Isso. Com virgula sai "Ola Ana"; a versao B colaria: "OlaAna".',
+        feedbackErrado: 'A versao A (virgula) imprime "Ola Ana"; a B (+) imprime "OlaAna".',
+        },
+        { // 3) parsons: reordenar as linhas arrastando
+        id: 'ex3',
+        tipo: 'parsons',
+        titulo: 'Montar um programa linear',
+        nota: 'Como o programa roda de cima pra baixo, uma variavel so pode ser usada DEPOIS de receber um valor.',
+        enunciado: 'Arraste as linhas para a ordem certa: somar a e b e imprimir o total.',
+        linhas: ['print(total)', 'total = a + b', 'a = 2', 'b = 3'],
+        corretas: [
+            ['a = 2', 'b = 3', 'total = a + b', 'print(total)'],
+            ['b = 3', 'a = 2', 'total = a + b', 'print(total)'],
+        ],
+        dica: 'Uma variavel so pode ser usada depois de receber um valor.',
+        feedbackCerto: 'Isso. a e b primeiro, depois a soma e por fim o print.',
+        feedbackErrado: 'Defina a e b antes de total = a + b; o print fica por ultimo.',
+        },
+        { // 4) lacuna: completa o MEIO do codigo (a expressao de c)
+        id: 'ex4',
+        tipo: 'lacuna',
+        titulo: 'Complete a conta',
+        nota: 'Ler codigo tambem e completar o que falta no meio de um programa. Aqui c deve guardar a soma de a e b.',
+        enunciado: 'Complete a lacuna para c valer 15 (o programa deve imprimir 15).',
+        antes: 'a = 12\nb = 3\nc = ',
+        depois: '\nprint(c)',
+        resposta: ['a + b', 'b + a'],
+        dica: 'c tem que somar a com b.',
+        feedbackCerto: 'Isso. c = a + b = 12 + 3 = 15.',
+        feedbackErrado: 'A lacuna e a + b (ou b + a): assim c vale 12 + 3 = 15.',
+        },
+        { // 5) multipla: acompanhar o valor de cada variavel linha a linha
+        id: 'ex5',
+        tipo: 'multipla',
+        titulo: 'Quem recebe o valor',
+        nota: 'Uma variavel guarda sempre o ULTIMO valor que recebeu. Vale acompanhar linha por linha o que cada uma vale.',
+        enunciado: 'O que este programa imprime?',
+        codigo: 'a = 1\nb = a + 1\na = b + 1\nprint(a, b)',
+        opcoes: ['3 2', '2 3', '1 2', '3 3'],
+        correta: 0,
+        dica: 'Execute linha a linha, guardando o valor atual de a e de b.',
+        feedbackCerto: 'Isso. a=1, b=2, depois a=3. Entao print(a, b) mostra "3 2".',
+        feedbackErrado: 'a=1; b=a+1=2; a=b+1=3. No fim a=3 e b=2, entao "3 2".',
+        },
+        { // 6) parsons (2o): ler dois numeros e calcular a media
+        id: 'ex6',
+        tipo: 'parsons',
+        titulo: 'Ler e calcular a media',
+        nota: 'int(input()) le um numero digitado pela pessoa. Pra tirar a media voce precisa ter os dois numeros ANTES de calcular.',
+        enunciado: 'Reordene para ler dois numeros do teclado e imprimir a media deles.',
+        linhas: ['media = (a + b) / 2', 'b = int(input())', 'print(media)', 'a = int(input())'],
+        corretas: [
+            ['a = int(input())', 'b = int(input())', 'media = (a + b) / 2', 'print(media)'],
+            ['b = int(input())', 'a = int(input())', 'media = (a + b) / 2', 'print(media)'],
+        ],
+        dica: 'Leia os dois valores antes de calcular; so no fim imprima a media.',
+        feedbackCerto: 'Isso. Le a e b, calcula (a + b) / 2 e imprime.',
+        feedbackErrado: 'As duas leituras vem antes; depois media = (a + b) / 2 e por fim print.',
+        },
+        { // 7) saidaMultipla (2o): a mesma variavel sendo atualizada
+        id: 'ex7',
+        tipo: 'saidaMultipla',
+        titulo: 'Atualizar a mesma variavel',
+        nota: 'De novo o passo a passo: em x = x + 3 o Python resolve a conta da direita e guarda o resultado de volta no proprio x.',
+        enunciado: 'O que o programa imprime?',
+        codigo: 'x = 2\nx = x + 3\nx = x * 2\nprint(x)',
+        rotulos: ['Saida'],
+        respostas: ['10'],
+        dica: 'x muda a cada linha: comece em 2 e aplique uma operacao por vez.',
+        feedbackCerto: 'Isso. 2 -> 2+3=5 -> 5*2=10.',
+        feedbackErrado: 'x vale 2, depois 5 (2+3) e por fim 10 (5*2).',
+        },
+        { // 8) associacao: ligar cada conta ao resultado com fios (arrastar)
+        id: 'ex8',
+        tipo: 'associacao',
+        titulo: 'Ligue a conta ao resultado',
+        nota: 'Fechando a trilha: resolva cada conta de cabeca e ligue no resultado. Olho no % (resto).',
+        enunciado: 'Arraste um fio de cada conta ate o seu resultado.',
+        esquerda: ['4 + 3', '2 * 5', '9 - 3', '8 % 3'],
+        opcoes: ['2', '6', '7', '10', '12'],
+        correto: ['7', '10', '6', '2'],
+        dica: 'Resolva cada conta: + soma, * multiplica, - subtrai, % e o resto da divisao.',
+        feedbackCerto: 'Isso. 4 + 3 = 7, 2 * 5 = 10, 9 - 3 = 6 e 8 % 3 = 2.',
+        feedbackErrado: '4 + 3 = 7, 2 * 5 = 10, 9 - 3 = 6, 8 % 3 = 2 (resto da divisao).',
+        },
+    ],
 }
