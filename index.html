@@ -1,12 +1,17 @@
 <!doctype html>
+<!-- Pagina base que o navegador carrega. O React desenha tudo dentro da div
+     #root abaixo; o arquivo src/main.jsx e o ponto de entrada do JavaScript. -->
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
+    <!-- Faz a pagina se ajustar a largura da tela (desktop e celular). -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DevForger</title>
+    <title>DevForge</title>
   </head>
   <body>
+    <!-- O React monta a aplicacao aqui dentro (ver src/main.jsx). -->
     <div id="root"></div>
+    <!-- type="module" permite usar import/export; o Vite processa este arquivo. -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
