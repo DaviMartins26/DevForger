@@ -30,6 +30,7 @@ import {
 import TelaChat from './telas/TelaChat.jsx' // apresentacao atual: conversa com a Lari
 import TelaLicaoInterrompida from './telas/TelaLicaoInterrompida.jsx'
 import TelaConclusao from './telas/TelaConclusao.jsx'
+import Quadrinho from '../quadrinhos/Quadrinho.jsx' // quadrinho de fechamento da trilha
 
 // XP ganho num exercicio acertado: a base menos um desconto por erro, mas nunca
 // abaixo do piso. Math.max devolve o MAIOR dos dois, entao segura o XP_MINIMO.
@@ -48,7 +49,9 @@ function mensagemErro(exercicio, erros) {
   return MENSAGEM_ERRO_SIMPLES
 }
 
-export default function Jogo({ trilha, aoVoltar }) {
+// roteiroFinal (opcional): quadrinho tocado ao concluir a trilha, antes da tela
+// de conclusao (vem do App; so a Trilha 1 tem, por enquanto).
+export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
   // useState cria uma "memoria" do componente: (valor agora, funcao que troca o valor)
   // trocar o valor por essa funcao faz o React redesenhar a tela.
   const [indice, setIndice] = useState(0)
@@ -72,6 +75,8 @@ export default function Jogo({ trilha, aoVoltar }) {
 
   // se o aluno concluiu a trilha (passou do ultimo exercicio)
   const [finalizado, setFinalizado] = useState(false)
+  // se ja viu o quadrinho de fechamento da trilha (quando houver roteiroFinal)
+  const [viuFinal, setViuFinal] = useState(false)
 
   // o exercicio atual = o da posicao "indice" na lista da trilha
   const exercicio = trilha.exercicios[indice]
@@ -152,11 +157,24 @@ export default function Jogo({ trilha, aoVoltar }) {
     setStreak(0)
     setXpTotal(0)
     setFinalizado(false)
+    setViuFinal(false)
   }
 
   // Escolha da tela. A ordem importa: ficar sem vidas interrompe antes de tudo.
   if (vidas <= 0) {
     return <TelaLicaoInterrompida xpTotal={xpTotal} aoRecomecar={aoRecomecar} aoVoltar={aoVoltar} />
+  }
+  // Ao concluir a trilha, se houver um quadrinho de fechamento ainda nao visto,
+  // mostra ele antes da conclusao. variaveis={{ xp }} injeta a pontuacao real na
+  // fala do Chefe (o marcador {xp} do roteiro).
+  if (finalizado && roteiroFinal && !viuFinal) {
+    return (
+      <Quadrinho
+        roteiro={roteiroFinal}
+        variaveis={{ xp: xpTotal }}
+        aoFinalizar={() => setViuFinal(true)}
+      />
+    )
   }
   if (finalizado) {
     return <TelaConclusao xpTotal={xpTotal} vidas={vidas} aoRecomecar={aoRecomecar} aoVoltar={aoVoltar} />

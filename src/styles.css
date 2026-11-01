@@ -51,16 +51,73 @@ h2 {
   font-weight: 600;
   margin: 0.2rem 0 0.6rem;
 }
-/* botoes dessas telas (Recomecar / Voltar ao catalogo): mesmo neon do chat-btn-enviar. */
-main button {
+/* ---- Botoes ----
+   Estilo padrao (neon ciano) que vale pra TODOS os <button> sem classe propria:
+   os do quadrinho (EN/Pular/Anterior/Proximo), os das telas de fim, etc. O chat
+   tem botoes proprios (.chat-btn-*) que sobrescrevem este. */
+button {
+  font: inherit; /* herda a fonte da pagina (nao a padrao feia do navegador) */
+  cursor: pointer;
+  background: rgba(53, 214, 232, 0.12);
+  color: var(--ink);
+  border: 1px solid rgba(53, 214, 232, 0.45);
+  border-radius: 999px; /* pilula */
+  padding: 8px 16px;
+}
+button:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(53, 214, 232, 0.3); /* brilho ao passar o mouse */
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+/* .df-primario = botao de acao principal (ambar), ex.: o "Comecar" do catalogo. */
+.df-primario {
   background: linear-gradient(90deg, var(--amber), #ffcb6b);
   color: #2a1a00;
   border: none;
-  border-radius: 999px;
-  padding: 9px 18px;
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 0 14px rgba(244, 171, 60, 0.4);
+  box-shadow: 0 0 14px rgba(244, 171, 60, 0.35);
+}
+.df-primario:hover {
+  box-shadow: 0 0 18px rgba(244, 171, 60, 0.55);
+}
+
+/* ---- Catalogo de trilhas (TelaCatalogo) ---- */
+/* .cat-lista = a lista de cards (tira o marcador do <ul> e empilha com espaco). */
+.cat-lista {
+  list-style: none;
+  padding: 0;
+  margin: 1.1rem 0 0;
+  display: grid; /* grid de 1 coluna; o gap separa os cards */
+  gap: 12px;
+}
+/* .cat-card = o card de uma trilha (fundo escuro, borda ciano sutil). */
+.cat-card {
+  background: linear-gradient(180deg, rgba(18, 35, 58, 0.92), rgba(11, 20, 34, 0.94));
+  border: 1px solid rgba(53, 214, 232, 0.25);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+.cat-card:hover {
+  border-color: rgba(53, 214, 232, 0.55);
+  box-shadow: 0 0 18px rgba(53, 214, 232, 0.18), 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+.cat-card h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+}
+/* o "(N exercicios)" ao lado do titulo: menor e apagado. */
+.cat-card h3 small {
+  color: var(--muted);
+  font-weight: 400;
+}
+.cat-card p {
+  margin: 0 0 0.7rem;
+  color: var(--muted);
 }
 
 /* ==========================================================================
@@ -541,5 +598,74 @@ main button {
   }
   .chat-bolha {
     max-width: 86%; /* bolhas um pouco mais largas, ja que a tela e estreita */
+  }
+}
+
+/* ==========================================================================
+   Quadrinhos (Quadrinho.jsx) - arte + baloes de texto POR CIMA
+   ========================================================================== */
+/* .quadrinho = o container centralizado do quadrinho. */
+.quadrinho {
+  max-width: 900px;
+  margin: 2rem auto; /* 2rem em cima/baixo, auto nas laterais = centraliza */
+  padding: 0 1rem;
+}
+/* a barra de cima (titulo + idioma/pular) e a navegacao de baixo compartilham o
+   mesmo layout: itens empurrados pras pontas (space-between). */
+.quadrinho-barra,
+.quadrinho-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0;
+  gap: 0.5rem;
+}
+/* .quadrinho-palco = a area da arte. position: relative faz dela a REFERENCIA pros
+   baloes (que sao absolute). aspect-ratio 16/9 fixa a proporcao (casa com a arte). */
+.quadrinho-palco {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0b1020;
+  border: 1px solid rgba(53, 214, 232, 0.3);
+  border-radius: 12px;
+  overflow: hidden; /* corta o que passar das bordas arredondadas */
+}
+/* a imagem preenche o palco sem distorcer (contain mostra a arte inteira). */
+.quadrinho-arte {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* placeholder quando o quadro ainda nao tem arte (mostra a descricao do roteiro). */
+.quadrinho-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  color: #aab;
+  font-style: italic;
+}
+/* .quadrinho-balao = a fala por cima da arte. position: absolute + left/top/width
+   (vindos do roteiro em %) encaixam ele dentro do balao branco ja desenhado na
+   imagem. Fundo branco de proposito, pra ser legivel sobre qualquer arte. */
+.quadrinho-balao {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+/* no celular, a arte fica menor, entao os baloes diminuem a fonte pra caber. */
+@media (max-width: 640px) {
+  .quadrinho-balao {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.45rem;
   }
 }
