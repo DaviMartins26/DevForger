@@ -1,62 +1,545 @@
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
+/* Variaveis do tema (cores da lore: neon cyan + ambar). Guardar a cor num nome
+   (--cyan) deixa usar em varios lugares via var(--cyan); pra trocar o tema no
+   futuro muda so AQUI e todo o resto acompanha. */
+:root {
+  --cyan: #35d6e8; /* ciano neon (cor da Lari / destaques) */
+  --amber: #f4ab3c; /* ambar (cor do jogador / botao principal) */
+  --ink: #e6eef8; /* "tinta": a cor do texto comum (quase branco) */
+  --muted: #9fb3c8; /* texto secundario, mais apagado (cinza-azulado) */
+  --line: rgba(255, 255, 255, 0.09); /* branco bem transparente, pra linhas/bordas sutis */
+  --bg: #0b1424; /* azul bem escuro, cor de fundo base */
 }
 
-/* ---- fios (tipo associacao): duas colunas + fios em SVG por cima ---------- */
-/* o container e "relative" pra o SVG e as portas serem medidos em relacao a ele */
+/* body = a pagina toda. Fundo do laboratorio + tema escuro; serve de base pras
+   telas que NAO sao o chat (conclusao e licao interrompida, que usam <main>). O
+   chat e um overlay fixo por cima, entao cobre isto quando esta ativo. */
+body {
+  margin: 0; /* remove a margem que o navegador poe por padrao */
+  min-height: 100vh; /* ocupa a altura toda da janela (pro fundo cobrir tudo) */
+  background: var(--bg) url('/chat/laboratorio-background.jpg') center / cover fixed no-repeat;
+  color: var(--ink); /* cor de texto padrao (quase branco) */
+  font-family: system-ui, sans-serif; /* usa a fonte do sistema (sem baixar nada) */
+}
+/* escurecimento fixo por cima do fundo, pro texto se destacar (fica ATRAS do conteudo) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(130% 120% at 50% 35%, rgba(11, 20, 36, 0.55), rgba(6, 10, 20, 0.94));
+}
+
+/* ---- Shell das telas fora do chat (conclusao / licao interrompida) ----
+   Essas telas usam <main> com <h1>/<h2>/<button> simples. Aqui damos o tema
+   (antes apareciam "sem css", texto preto no branco do navegador). */
+main {
+  max-width: 820px;
+  margin: 0 auto; /* 0 em cima/baixo, "auto" nas laterais = centraliza na horizontal */
+  padding: 28px 16px;
+}
+/* h1 com texto em degrade: pinta o fundo cyan->ambar e "recorta" ele na forma das letras */
+h1 {
+  font-size: 1.9rem;
+  margin: 0 0 0.2rem;
+  background: linear-gradient(90deg, var(--cyan), var(--amber));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent; /* texto transparente pra aparecer o degrade atras */
+}
+h2 {
+  color: var(--ink);
+  font-weight: 600;
+  margin: 0.2rem 0 0.6rem;
+}
+/* botoes dessas telas (Recomecar / Voltar ao catalogo): mesmo neon do chat-btn-enviar. */
+main button {
+  background: linear-gradient(90deg, var(--amber), #ffcb6b);
+  color: #2a1a00;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 14px rgba(244, 171, 60, 0.4);
+}
+
+/* ==========================================================================
+   Minigame de FIOS (tipo associacao): duas colunas + fios desenhados em SVG
+   ========================================================================== */
+
+/* .fios = o container das duas colunas. position: relative faz dele a "referencia"
+   pra medir onde cada porta esta (o SVG e as bolinhas se posicionam em relacao a ele). */
 .fios {
   position: relative;
-  display: flex;
-  justify-content: space-between;
-  max-width: 360px;
-  margin: 8px 0;
+  display: flex; /* poe os filhos (as 2 colunas) lado a lado */
+  justify-content: space-between; /* empurra uma coluna pra cada ponta, com espaco no meio */
+  max-width: 360px; /* nao deixa esticar demais em telas largas */
+  margin: 8px 0; /* um respiro em cima e embaixo */
   user-select: none; /* nao deixa o texto ficar selecionado (azul) ao arrastar os fios */
 }
-/* o SVG cobre o container inteiro, por cima das colunas */
+/* .fios-svg = a camada transparente POR CIMA das colunas, onde os fios sao desenhados. */
 .fios-svg {
-  position: absolute;
+  position: absolute; /* fica solto por cima, ocupando o container inteiro */
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* deixa o clique passar pras portas que estao embaixo */
+  pointer-events: none; /* o clique "atravessa" o SVG e chega nas portas que estao embaixo */
 }
+/* .fios-col = cada coluna (esquerda/direita): empilha os itens de cima pra baixo. */
 .fios-col {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  flex-direction: column; /* column = um item embaixo do outro (em vez de lado a lado) */
+  gap: 14px; /* espaco entre os itens da coluna */
 }
+/* .fios-row = uma linha (o rotulo + a bolinha da porta), lado a lado e centralizados. */
 .fios-row {
   display: flex;
-  align-items: center;
+  align-items: center; /* alinha verticalmente o texto com a bolinha */
   gap: 8px;
 }
-/* na esquerda, o rotulo vem antes e a porta fica na beirada (perto do centro) */
+/* na coluna da ESQUERDA, empurra o conteudo pra direita (porta perto do centro). */
 .fios-esq .fios-row {
   justify-content: flex-end;
 }
-/* a "porta" e uma bolinha que da pra agarrar */
+/* .fios-porta = a "bolinha" que da pra agarrar pra puxar/soltar o fio. */
 .fios-porta {
   width: 14px;
   height: 14px;
-  border-radius: 50%;
+  border-radius: 50%; /* 50% num quadrado = circulo perfeito */
   border: 2px solid #888;
   background: #fff;
-  cursor: grab;
-  flex: none;
+  cursor: grab; /* o cursor vira uma "mãozinha" de agarrar */
+  flex: none; /* nao deixa a bolinha encolher/esticar */
 }
+/* .fios-ligada = a porta que JA tem fio ligado fica preenchida de ciano. */
 .fios-ligada {
-  background: #35d6e8; /* porta ja ligada fica preenchida */
+  background: #35d6e8;
 }
+/* .fio = a linha ja ligada (um <line> do SVG). stroke = a cor do traco. */
 .fio {
   stroke: #666;
-  stroke-width: 2;
+  stroke-width: 2; /* espessura do traco */
 }
+/* .fio-arrasto = o fio que esta sendo puxado agora fica tracejado. */
 .fio-arrasto {
-  stroke-dasharray: 5; /* o fio sendo puxado fica tracejado */
+  stroke-dasharray: 5; /* desenha o traco "picotado" (5px traco, 5px vazio...) */
 }
+/* dentro do minigame, codigo e rotulos em fonte monoespacada (cara de codigo). */
 .fios code,
 .fios span {
   font-family: monospace;
+}
+
+/* ==========================================================================
+   Minigame de PARSONS (tipo parsons): linhas de codigo que se arrasta
+   ==========================================================================
+   Antes estas cores estavam "inline" no parsons.jsx (fundo branco), e estilo
+   inline VENCE o CSS externo - por isso as linhas ficavam brancas no chat
+   escuro. Movido pra ca (classes parsons-*) pra seguir o tema. */
+/* .parsons-lista = a <ol> das linhas: tira o numero/marcador e o recuo padrao. */
+.parsons-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* .parsons-item = cada linha arrastavel (tema escuro, borda ciano). */
+.parsons-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(53, 214, 232, 0.4);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin: 6px 0;
+  cursor: grab; /* "mãozinha" de agarrar */
+  user-select: none; /* nao seleciona o texto ao arrastar */
+}
+/* .parsons-arrastando = a linha que esta sendo arrastada AGORA fica acesa (ciano). */
+.parsons-arrastando {
+  background: rgba(53, 214, 232, 0.18);
+  border-color: var(--cyan);
+}
+/* o codigo da linha: monoespacado e preservando a indentacao (white-space: pre). */
+.parsons-item code {
+  white-space: pre;
+  font-family: monospace;
+  color: #d7e6ff;
+}
+
+/* .ok = mensagem de acerto/dica (verde); .erro = mensagem de erro (vermelho). */
+.ok {
+  color: #178000;
+}
+.erro {
+  color: #c0392b;
+}
+
+/* ==========================================================================
+   Chat da Lari (TelaChat) - a conversa ocupa a tela toda, por cima de tudo
+   ==========================================================================
+   Estrutura das caixas, de fora pra dentro:
+     .chat-tela  (fundo do lab, cobre a janela)
+       -> .chat-painel  (a moldura neon)
+            -> .chat-inner  (a caixa escura de verdade, dividida em 3 faixas:)
+                 -> .chat-top   (cabecalho + HUD)
+                 -> .chat-log   (as mensagens, a parte que ROLA)
+                 -> .chat-dock  (o rodape: campo de resposta + botoes)
+   ========================================================================== */
+
+/* .chat-tela = a camada mais de fora. position: fixed + inset: 0 "cola" ela nos 4
+   cantos da janela, cobrindo tudo. z-index alto = fica na frente de outras coisas. */
+.chat-tela {
+  position: fixed;
+  inset: 0; /* atalho pra top/right/bottom/left = 0 (gruda nos 4 cantos) */
+  z-index: 20; /* quanto maior, mais "na frente" fica */
+  /* fundo: a cor base + a imagem do laboratorio por cima, centralizada e cobrindo tudo */
+  background: var(--bg) url('/chat/laboratorio-background.jpg') center / cover no-repeat;
+  display: flex; /* usa flex so pra CENTRALIZAR o painel na tela */
+  align-items: center; /* centraliza na vertical */
+  justify-content: center; /* centraliza na horizontal */
+  padding: 16px; /* uma folga entre o painel e a beirada da janela */
+  color: var(--ink); /* cor de texto padrao dentro do chat */
+}
+/* ::before = um elemento "fantasma" criado so pelo CSS, por cima do fundo. Aqui ele
+   e um escurecimento (gradiente) pra imagem do lab nao competir com o texto. */
+.chat-tela::before {
+  content: ''; /* obrigatorio pra o ::before existir (mesmo vazio) */
+  position: absolute;
+  inset: 0;
+  /* radial-gradient = circulo de luz: mais claro no meio, bem escuro nas bordas */
+  background: radial-gradient(120% 120% at 50% 42%, rgba(11, 20, 36, 0.4), rgba(6, 10, 20, 0.92));
+}
+
+/* .chat-painel = a MOLDURA o fundo e um gradiente
+   cyan->ambar e o padding de 2px deixa esse gradiente "vazar" so nas beiradas,
+   virando uma borda colorida. O box-shadow faz o brilho neon em volta. */
+.chat-painel {
+  position: relative; /* vira referencia pros filhos posicionados */
+  width: min(700px, 100%); /* min() = o MENOR dos dois: 700px, ou 100% se a tela for menor */
+  height: min(88vh, 780px); /* vh = % da altura da janela; pega o menor entre 88% e 780px */
+  background: linear-gradient(140deg, var(--cyan), var(--amber)); /* degrade da borda */
+  padding: 2px; /* a "espessura" da borda colorida */
+  border-radius: 18px; /* cantos arredondados */
+  box-shadow:
+    0 0 26px rgba(53, 214, 232, 0.22), /* brilho ciano */
+    0 0 36px rgba(244, 171, 60, 0.16), /* brilho ambar */
+    0 12px 44px rgba(0, 0, 0, 0.55); /* sombra escura embaixo, pra dar profundidade */
+}
+/* .chat-inner = a caixa escura de verdade (o conteudo). flex-direction: column
+   empilha as 3 faixas (top, log, dock) uma embaixo da outra. */
+.chat-inner {
+  position: relative;
+  height: 100%; /* ocupa toda a altura do painel */
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(18, 35, 58, 0.96), rgba(11, 20, 34, 0.97));
+  border-radius: 16px; /* um pouco menor que o painel, pra encaixar dentro da borda */
+  overflow: hidden; /* corta o que passar das bordas arredondadas */
+}
+
+/* ---- Cabecalho / HUD (a faixa de cima) ---- */
+/* .chat-top = a barra do topo: botao voltar + titulo + indicadores, lado a lado. */
+.chat-top {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espaco entre voltar / titulo / HUD */
+  padding: 10px 14px; /* 10px em cima/baixo, 14px nas laterais */
+  border-bottom: 1px solid var(--line); /* linha fininha separando do log */
+  background: linear-gradient(90deg, rgba(53, 214, 232, 0.1), rgba(244, 171, 60, 0.1));
+}
+/* .chat-top-titulo = o bloco "Lari — DevForge" + subtitulo. flex: 1 faz ele ESTICAR
+   e empurrar o HUD pra ponta direita. */
+.chat-top-titulo {
+  flex: 1; /* ocupa todo o espaco sobrando (empurra o HUD pra direita) */
+  display: flex;
+  flex-direction: column; /* o nome em cima, o subtitulo embaixo */
+  line-height: 1.15; /* linhas mais juntinhas */
+  min-width: 0; /* permite o texto encolher pra o "..." (ellipsis) funcionar */
+}
+.chat-top-titulo strong {
+  font-size: 0.95rem; /* rem = relativo ao tamanho de fonte base (1rem = padrao) */
+}
+/* o subtitulo (trilha · exercicio N/total): menor, apagado e com "..." se nao couber. */
+.chat-top-titulo span {
+  font-size: 0.72rem;
+  color: var(--muted);
+  overflow: hidden; /* esconde o que passar */
+  text-overflow: ellipsis; /* mostra "..." no corte */
+  white-space: nowrap; /* nao quebra em varias linhas */
+}
+/* .chat-hud = o grupo dos indicadores (❤️ vida, 🔥 streak, ✦ XP), lado a lado. */
+.chat-hud {
+  display: flex;
+  gap: 8px;
+  font-size: 0.8rem;
+  white-space: nowrap; /* mantem cada indicador numa linha so */
+}
+/* cada <span> do HUD vira uma "pilula" (cantos bem redondos) com fundo sutil. */
+.chat-hud span {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 999px; /* valor gigante = formato de pilula/capsula */
+  padding: 2px 8px;
+}
+
+/* ---- Log de mensagens (a faixa do meio, que rola) ---- */
+/* .chat-log = onde as bolhas aparecem. flex: 1 faz ele OCUPAR todo o espaco entre o
+   topo e o dock; overflow-y: auto cria a barra de rolagem quando enche. */
+.chat-log {
+  flex: 1; /* estica pra preencher a altura que sobra */
+  overflow-y: auto; /* rola na vertical quando as mensagens passam da altura */
+  padding: 16px;
+  display: flex;
+  flex-direction: column; /* as mensagens empilhadas de cima pra baixo */
+  gap: 12px; /* espaco entre uma mensagem e outra */
+}
+/* .chat-msg = uma linha da conversa (avatar + bolha). */
+.chat-msg {
+  display: flex;
+}
+/* mensagem da Lari: encostada na ESQUERDA, avatar e bolha alinhados embaixo. */
+.chat-msg-lari {
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 8px; /* espaco entre o avatar e a bolha */
+}
+/* mensagem do jogador ("nos"): encostada na DIREITA. */
+.chat-msg-nos {
+  justify-content: flex-end;
+}
+/* .chat-avatar = o rostinho redondo da Lari ao lado da bolha. */
+.chat-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%; /* deixa a imagem redonda */
+  flex: 0 0 auto; /* tamanho fixo: nao encolhe nem estica */
+  object-fit: cover; /* a imagem preenche o circulo sem distorcer (corta o excesso) */
+  background: #0c1726;
+  border: 1px solid rgba(53, 214, 232, 0.45);
+  align-self: flex-end; /* encosta o avatar na base da bolha */
+}
+/* o texto dentro da bolha: pre-line faz respeitar as quebras de linha (\n) do texto. */
+.chat-bolha-txt {
+  white-space: pre-line;
+}
+/* .chat-bolha = o "balãozinho" com o texto. */
+.chat-bolha {
+  max-width: 82%; /* a bolha nunca passa de 82% da largura (nao vira uma faixa inteira) */
+  padding: 9px 12px;
+  border-radius: 14px;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3); /* sombrinha leve pra destacar do fundo */
+}
+/* bolha da Lari: fundo ciano translucido. O canto superior esquerdo menos redondo
+   da aquele visual de "balao saindo do avatar". */
+.chat-msg-lari .chat-bolha {
+  background: rgba(53, 214, 232, 0.12);
+  border: 1px solid rgba(53, 214, 232, 0.42);
+  border-top-left-radius: 4px;
+}
+/* bolha do jogador: fundo ambar translucido; o canto "puxado" e o de cima a direita. */
+.chat-msg-nos .chat-bolha {
+  background: rgba(244, 171, 60, 0.14);
+  border: 1px solid rgba(244, 171, 60, 0.48);
+  border-top-right-radius: 4px;
+}
+/* .chat-codigo = o bloco de codigo dentro de uma bolha (ex.: o enunciado com codigo). */
+.chat-codigo {
+  margin: 0.5rem 0 0; /* um respiro so em cima (separa do texto acima) */
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.5rem;
+  font-size: 0.82rem;
+  color: #d7e6ff;
+  overflow: auto; /* rola na horizontal se a linha for comprida */
+  white-space: pre; /* preserva espacos e quebras EXATAMENTE (indentacao do codigo) */
+}
+/* .chat-digitando = a bolha das "tres bolinhas" enquanto a Lari esta digitando. */
+.chat-digitando {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+/* cada bolinha do "digitando": um circulo que sobe e desce em loop (animacao chatdot). */
+.chat-digitando span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  opacity: 0.5;
+  animation: chatdot 1s infinite; /* roda a animacao chatdot, 1s cada volta, pra sempre */
+}
+/* atrasa a 2a e a 3a bolinha, pra elas pularem em sequencia (efeito de onda). */
+.chat-digitando span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.chat-digitando span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+/* @keyframes = a "receita" da animacao: em cada % do tempo, como a bolinha esta.
+   No comeco/fim parada e apagada; no meio (30%) sobe 4px e fica opaca. */
+@keyframes chatdot {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0); /* posicao normal */
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-4px); /* sobe 4px (Y negativo = pra cima) */
+    opacity: 1;
+  }
+}
+
+/* ---- Dock (a faixa de baixo: onde o aluno responde) ---- */
+/* .chat-dock = o rodape. Empilha (column) o campo de resposta e a fileira de botoes. */
+.chat-dock {
+  border-top: 1px solid var(--line); /* linha separando do log */
+  padding: 12px 14px;
+  background: rgba(8, 14, 24, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* .chat-campo = a caixa que ENVOLVE o campo de resposta do exercicio (input, opcoes, fios...). */
+.chat-campo {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  max-height: 34vh; /* nao deixa o campo passar de 34% da altura da tela */
+  overflow: auto; /* se passar, rola dentro da caixa */
+}
+/* .chat-dock-acoes = a fileira de botoes do rodape (dica, enviar...). Por padrao
+   fica encostada na DIREITA. */
+.chat-dock-acoes {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+/* a variante .chat-centro centraliza os botoes (usada em "Próxima", "Tentar de novo"
+   e na confirmacao da dica, quando so ha botao(oes) no meio). */
+.chat-dock-acoes.chat-centro {
+  justify-content: center;
+}
+
+/* .chat-btn-enviar = o BOTAO PRINCIPAL (ambar). E o mesmo estilo usado em varios
+   momentos: "Enviar ▶", "Próxima ▶", "Sim (−1 ❤️)" e "Tentar de novo ↩". */
+.chat-btn-enviar {
+  background: linear-gradient(90deg, var(--amber), #ffcb6b); /* degrade ambar */
+  color: #2a1a00; /* texto marrom escuro (contraste no botao claro) */
+  border: none;
+  border-radius: 999px; /* formato de pilula */
+  padding: 9px 18px;
+  font-weight: 700; /* negrito */
+  cursor: pointer; /* cursor de "clicavel" */
+  box-shadow: 0 0 14px rgba(244, 171, 60, 0.4); /* brilho ambar em volta */
+}
+/* :disabled = como o botao fica quando esta DESABILITADO (ex.: Enviar sem resposta).
+   Mais apagado, cursor de "bloqueado" e sem o brilho. */
+.chat-btn-enviar:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+/* .chat-btn-dica = o botao redondo do emoji 💡 (pedir dica). width = height + padding 0
+   + border-radius 999px = um circulo com o emoji no centro. */
+.chat-btn-dica {
+  display: inline-flex; /* flex pra centralizar o emoji dentro do circulo */
+  align-items: center;
+  justify-content: center;
+  background: rgba(53, 214, 232, 0.14);
+  color: var(--cyan);
+  border: 1px solid rgba(53, 214, 232, 0.5);
+  border-radius: 999px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 1.1rem; /* tamanho do emoji */
+  line-height: 1;
+  cursor: pointer;
+}
+/* dica desabilitada (ja usada no exercicio): apagada e bloqueada. */
+.chat-btn-dica:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+/* .chat-btn-ghost = botao SECUNDARIO "fantasma" (so contorno, fundo transparente).
+   Usado no "←" de voltar e no "Não" da confirmacao da dica. */
+.chat-btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+/* ---- Campos de resposta dentro do chat (tema escuro) ----
+   Os tipos de exercicio (multipla, lacuna, parsons...) sao os MESMOS; aqui so
+   reestilizamos os elementos deles pra combinar com o fundo escuro do chat. */
+.chat-campo label {
+  color: var(--ink);
+}
+/* a caixinha de texto (lacuna, saidaMultipla): fundo escuro, borda ciano. */
+.chat-campo input[type='text'] {
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--ink);
+  border: 1px solid rgba(53, 214, 232, 0.4);
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+/* menus suspensos (se algum tipo usar <select>). */
+.chat-campo select {
+  background: #12233a;
+  color: var(--ink);
+  border: 1px solid rgba(53, 214, 232, 0.4);
+  border-radius: 6px;
+  padding: 3px;
+}
+/* blocos de codigo dentro do campo (ex.: as versoes do contrastantes). */
+.chat-campo pre {
+  background: rgba(0, 0, 0, 0.35);
+  color: #d7e6ff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.4rem;
+}
+.chat-campo code {
+  color: #ffd9a0; /* codigo inline em tom ambar claro */
+}
+/* botoes que aparecem dentro do campo de resposta (ex.: alternativas clicaveis). */
+.chat-campo button {
+  background: rgba(53, 214, 232, 0.12);
+  color: var(--cyan);
+  border: 1px solid rgba(53, 214, 232, 0.4);
+  border-radius: 8px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+/* ---- Responsivo (celular) ----
+   640px de largura (celular). Aqui o chat vira tela cheia, sem a moldura. */
+@media (max-width: 640px) {
+  .chat-tela {
+    padding: 0; /* tira a folga: o painel encosta nas beiradas */
+  }
+  .chat-painel {
+    width: 100%;
+    height: 100%;
+    border-radius: 0; /* sem cantos arredondados (ocupa tudo) */
+    padding: 0; /* sem a borda em degrade */
+  }
+  .chat-inner {
+    border-radius: 0;
+  }
+  .chat-bolha {
+    max-width: 86%; /* bolhas um pouco mais largas, ja que a tela e estreita */
+  }
 }

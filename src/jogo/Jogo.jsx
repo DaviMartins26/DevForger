@@ -1,62 +1,193 @@
-// Motor do jogo (o "cerebro")
-// ---------------------------------------------
-// Guarda o ESTADO (qual exercicio, a resposta, o resultado) e manda a tela
-// desenhar. Recebe a trilha por prop. Comeca pequeno; cresce quando precisar.
-// ---------------------------------------------
+// ============================================================================
+// Jogo.jsx - Motor do jogo (o cerebro, independente do conteudo)
+// ----------------------------------------------------------------------------
+// Recebe UMA trilha por prop e cuida de TODO o estado da partida: qual
+// exercicio, a resposta, o resultado, os erros, as dicas e os indicadores que
+// acompanham o aluno pela trilha (vidas, streak, XP). Decide qual tela mostrar
+// (exercicio, licao interrompida ou conclusao). Nao conhece os tipos de
+// exercicio: usa o registro (exercicios/registro.jsx) pra verificar e desenhar
+// os numeros de dificuldade vem do config.js.
+//
+// aoVoltar (opcional) volta pro catalogo de trilhas (quando o App tiver um).
+// ============================================================================
 
 import { useState } from 'react'
 // funcoes do registro: o motor usa elas SEM conhecer os tipos de exercicio
 import { verificar, respostaInicial, temResposta } from '../exercicios/registro.jsx'
-import TelaExercicio from './telas/TelaExercicio.jsx'
+// os numeros da dificuldade/pontuacao ficam todos no config.js (faceis de ajustar)
+import {
+  VIDAS_INICIAIS,
+  ERROS_PARA_PERDER_VIDA,
+  XP_BASE,
+  XP_PENALIDADE_ERRO,
+  XP_MINIMO,
+  XP_BONUS_POR_STREAK,
+  ERROS_PARA_DICA,
+  ERROS_PARA_RESPOSTA,
+  MENSAGEM_ERRO_SIMPLES,
+} from '../config.js'
 
-export default function Jogo({ trilha }) {
-  // useState cria uma "memoria": [valor agora, funcao que troca o valor].
-  // indice = em qual exercicio da trilha estamos (comeca no 0, o primeiro)
+import TelaChat from './telas/TelaChat.jsx' // apresentacao atual: conversa com a Lari
+import TelaLicaoInterrompida from './telas/TelaLicaoInterrompida.jsx'
+import TelaConclusao from './telas/TelaConclusao.jsx'
+
+// XP ganho num exercicio acertado: a base menos um desconto por erro, mas nunca
+// abaixo do piso. Math.max devolve o MAIOR dos dois, entao segura o XP_MINIMO.
+function calcularXp(erros) {
+  return Math.max(XP_BASE - XP_PENALIDADE_ERRO * erros, XP_MINIMO)
+}
+
+// Feedback que cresce conforme o aluno erra o MESMO exercicio:
+//  - poucos erros: so avisa que errou
+//  - a partir de ERROS_PARA_DICA: mostra a dica
+//  - a partir de ERROS_PARA_RESPOSTA: entrega a resposta completa (feedbackErrado)
+//   Apenas no MVP REMOVER DEPOIS
+function mensagemErro(exercicio, erros) {
+  if (erros >= ERROS_PARA_RESPOSTA) return exercicio.feedbackErrado
+  if (erros >= ERROS_PARA_DICA) return 'Dica: ' + exercicio.dica
+  return MENSAGEM_ERRO_SIMPLES
+}
+
+export default function Jogo({ trilha, aoVoltar }) {
+  // useState cria uma "memoria" do componente: (valor agora, funcao que troca o valor)
+  // trocar o valor por essa funcao faz o React redesenhar a tela.
   const [indice, setIndice] = useState(0)
-
-  // o exercicio atual = o da posicao "indice" dentro da lista de exercicios
-  const exercicio = trilha.exercicios[indice]
-
-  // a resposta do usuario. O "() =>" faz o valor inicial ser calculado so uma vez
-  const [resposta, setResposta] = useState(() => respostaInicial(exercicio))
-
+  // guarda o indice anterior pra detectar "troquei de exercicio" durante o render
+  const [indiceAnterior, setIndiceAnterior] = useState(0)
+  // a resposta do aluno. O "() =>" calcula o valor inicial uma unica vez
+  const [resposta, setResposta] = useState(() => respostaInicial(trilha.exercicios[0]))
   // resultado: null (ainda nao verificou), true (acertou) ou false (errou)
   const [resultado, setResultado] = useState(null)
+  // quantas vezes o aluno errou ESTE exercicio (zera ao trocar de exercicio)
+  const [errosNoExercicio, setErrosNoExercicio] = useState(0)
+  // dica sob demanda: se o aluno ja trocou 1 vida pela dica neste exercicio
+  const [dicaPedida, setDicaPedida] = useState(false)
+  // se esta mostrando o pedido de confirmacao da dica (sem usar window.confirm, feio)
+  const [confirmandoDica, setConfirmandoDica] = useState(false)
 
-  // clicou Verificar: guarda se acertou (true/false) no resultado
-  function aoVerificar() {
-    setResultado(verificar(exercicio, resposta))
+  // Indicadores que NAO reiniciam entre exercicios (so no "Recomecar"):
+  const [vidas, setVidas] = useState(VIDAS_INICIAIS)
+  const [streak, setStreak] = useState(0)
+  const [xpTotal, setXpTotal] = useState(0)
+
+  // se o aluno concluiu a trilha (passou do ultimo exercicio)
+  const [finalizado, setFinalizado] = useState(false)
+
+  // o exercicio atual = o da posicao "indice" na lista da trilha
+  const exercicio = trilha.exercicios[indice]
+  const total = trilha.exercicios.length
+  const ultimo = indice === total - 1
+
+  // Padrao do React: ao trocar de exercicio (indice mudou), reinicia resposta,
+  // resultado, erros e a dica AINDA no render (sem useEffect). vidas/streak/XP
+  // NAO sao tocados aqui - eles atravessam a trilha inteira.
+  if (indice !== indiceAnterior) {
+    setIndiceAnterior(indice)
+    setResposta(respostaInicial(exercicio))
+    setResultado(null)
+    setErrosNoExercicio(0)
+    setDicaPedida(false)
+    setConfirmandoDica(false)
   }
 
-  // clicou Tentar de novo (depois de errar): volta o resultado pra null, o que
-  // faz o botao Verificar aparecer de novo (a opcao escolhida continua marcada)
+  // clicou Verificar: ve se acertou e atualiza os indicadores
+  function aoVerificar() {
+    const acertou = verificar(exercicio, resposta)
+    setResultado(acertou)
+    if (acertou) {
+      // sobe o streak e ganha XP: base (com desconto por erro) + bonus por streak
+      const novoStreak = streak + 1
+      setStreak(novoStreak)
+      // a forma setXp(xp => ...) usa o valor mais atual, sem depender do render
+      setXpTotal((xp) => xp + calcularXp(errosNoExercicio) + XP_BONUS_POR_STREAK * novoStreak)
+    } else {
+      // conta o erro, zera o streak e perde 1 vida a cada ERROS_PARA_PERDER_VIDA erros
+      const novosErros = errosNoExercicio + 1
+      setErrosNoExercicio(novosErros)
+      setStreak(0)
+      // o % (resto) da 0 quando novosErros e multiplo de ERROS_PARA_PERDER_VIDA (3, 6, 9...)
+      if (novosErros % ERROS_PARA_PERDER_VIDA === 0) setVidas((v) => v - 1)
+    }
+  }
+
+  // dica sob demanda, passo 1: so abre a confirmacao na pagina (uma vez por exercicio)
+  function aoPedirDica() {
+    if (dicaPedida) return
+    setConfirmandoDica(true)
+  }
+
+  // passo 2: o aluno confirma -> troca 1 vida pela dica
+  function aoConfirmarDica() {
+    setVidas((v) => v - 1)
+    setDicaPedida(true)
+    setConfirmandoDica(false)
+  }
+
+  // passo 2 (alternativa): desistiu da dica
+  function aoCancelarDica() {
+    setConfirmandoDica(false)
+  }
+
+  // clicou Tentar de novo: volta o resultado pra null (o Verificar reaparece)
   function aoTentarDeNovo() {
     setResultado(null)
   }
 
-  // clicou Proximo: vai pro proximo exercicio e limpa resposta/resultado
+  // clicou Proximo: avanca; se era o ultimo, marca a trilha como concluida
   function aoAvancar() {
-    const prox = indice + 1
-    // se nao existe proximo (era o ultimo exercicio), nao faz nada: evita quebrar
-    // ao ler trilha.exercicios[prox] (que seria undefined). Aqui, no futuro, entra
-    // a tela de conclusao.
-    if (prox >= trilha.exercicios.length) return
-    setIndice(prox)
-    setResposta(respostaInicial(trilha.exercicios[prox]))
-    setResultado(null)
+    if (ultimo) setFinalizado(true)
+    else setIndice((i) => i + 1)
   }
 
-  // desenha a tela passando o estado e as acoes (os botoes la chamam estas funcoes)
+  // clicou Recomecar: zera TUDO e volta pro primeiro exercicio
+  function aoRecomecar() {
+    setIndice(0)
+    setIndiceAnterior(0)
+    setResposta(respostaInicial(trilha.exercicios[0]))
+    setResultado(null)
+    setErrosNoExercicio(0)
+    setDicaPedida(false)
+    setConfirmandoDica(false)
+    setVidas(VIDAS_INICIAIS)
+    setStreak(0)
+    setXpTotal(0)
+    setFinalizado(false)
+  }
+
+  // Escolha da tela. A ordem importa: ficar sem vidas interrompe antes de tudo.
+  if (vidas <= 0) {
+    return <TelaLicaoInterrompida xpTotal={xpTotal} aoRecomecar={aoRecomecar} aoVoltar={aoVoltar} />
+  }
+  if (finalizado) {
+    return <TelaConclusao xpTotal={xpTotal} vidas={vidas} aoRecomecar={aoRecomecar} aoVoltar={aoVoltar} />
+  }
+  // tela normal: a conversa com a Lari (TelaChat). O motor passa o estado e as
+  // acoes por props; a tela so desenha. A TelaExercicio (reserva) recebe as mesmas
+  // props, entao pra voltar a ela e so trocar <TelaChat por <TelaExercicio aqui.
   return (
-    <TelaExercicio
+    <TelaChat
+      trilhaTitulo={trilha.titulo}
+      aula={trilha.aula || null}
+      vidas={vidas}
+      streak={streak}
+      xpTotal={xpTotal}
+      indice={indice}
+      total={total}
       exercicio={exercicio}
       resposta={resposta}
       setResposta={setResposta}
       resultado={resultado}
+      textoErro={resultado === false ? mensagemErro(exercicio, errosNoExercicio) : ''}
       podeVerificar={temResposta(exercicio, resposta)}
+      dicaPedida={dicaPedida}
+      confirmandoDica={confirmandoDica}
+      aoPedirDica={aoPedirDica}
+      aoConfirmarDica={aoConfirmarDica}
+      aoCancelarDica={aoCancelarDica}
       aoVerificar={aoVerificar}
       aoTentarDeNovo={aoTentarDeNovo}
       aoAvancar={aoAvancar}
+      aoVoltar={aoVoltar}
     />
   )
 }

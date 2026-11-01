@@ -67,30 +67,26 @@ function Campo({ resposta, setResposta, travado }) {
 
   return (
     // <ol> = lista ordenada; os pointer events ficam na lista inteira
+    // <ol> = lista ordenada; os pointer events ficam na lista inteira. A aparencia
+    // (cores, bordas) fica no styles.css nas classes parsons-*, pra seguir o tema.
     <ol
       ref={listaRef}
+      className="parsons-lista"
       onPointerMove={aoMover}
       onPointerUp={aoSoltar}
       onPointerLeave={aoSoltar}
-      style={{ listStyle: 'none', padding: 0 }}
     >
       {linhas.map((linha, i) => (
         <li
           key={i}
           data-linha                               // marca usada pelo indiceSob pra achar os itens
+          // parsons-arrastando (classe extra) so entra na linha que esta sendo arrastada
+          className={'parsons-item' + (arrastando === i ? ' parsons-arrastando' : '')}
           onPointerDown={() => aoDescer(i)}
-          style={{
-            border: '1px solid #ccc',
-            padding: '4px 8px',
-            margin: '4px 0',
-            cursor: 'grab',
-            userSelect: 'none', // nao deixa o texto ficar "selecionado" (azul) ao arrastar
-            background: arrastando === i ? '#eef' : '#fff', // destaca a linha sendo arrastada
-          }}
         >
           <span aria-hidden="true">⠿ </span>
-          {/* whiteSpace: 'pre' preserva a indentacao, pra o codigo parecer codigo */}
-          <code style={{ whiteSpace: 'pre' }}>{linha === '' ? ' ' : linha}</code>
+          {/* a indentacao do codigo (white-space: pre) fica no CSS .parsons-item code */}
+          <code>{linha === '' ? ' ' : linha}</code>
         </li>
       ))}
     </ol>
