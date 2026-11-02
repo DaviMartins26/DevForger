@@ -18,8 +18,9 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
-// traz a funcao que realmente fala com a IA 
-import { responderAlbert } from './iaProvider.mjs'
+// traz a funcao que realmente fala com a IA. Ela mora em api/shared/ 
+// (nao mais em server/) pra ser reusada tambem pela Azure Function em producao.
+import { responderAlbert } from '../api/shared/iaProvider.mjs'
 
 // AQUI = o caminho da PASTA onde este arquivo esta (a pasta server/). Precisamos
 // disso pra achar o server/.env ao lado, nao importa de onde o npm run dev rodou.

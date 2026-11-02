@@ -4,17 +4,21 @@
 // Este arquivo roda no SERVIDOR (Node), nao no navegador. Ele recebe a pergunta
 // do aluno + um resumo do exercicio e devolve a resposta do Albert.
 //
+// Fica em api/shared/ porque e REUSADO pelos dois backends: o plugin do Vite
+// (dev, em server/) e a Azure Function (producao, em api/src/functions/). Assim
+// a logica de IA existe em UM lugar so, sem duplicar.
+//
 // "AGNOSTICO de fornecedor" = ele nao casa com uma IA so. Qual IA responde
 // (Gemini, ou um "mock" de mentira pra teste) e escolhido por uma VARIAVEL DE
-// AMBIENTE (uma config que vem do server/.env), entao trocar de IA e so mudar o
-// .env - nenhuma tela do front muda.
+// AMBIENTE. Em dev ela vem do server/.env; em producao, das "Application
+// settings" do Azure. Trocar de IA e so mudar essa config - o front nao muda.
 //
-// Decisao do TCC: a IA e consumida via API de NUVEM e a chave fica SO aqui no
+// Decisao do TCC: a IA e consumida via API de NUVEM e a chave fica SO no
 // servidor (nunca no front, senao qualquer usuario veria a chave no navegador).
 // Hoje o padrao e o Gemini (free tier do Google AI Studio).
 //
-// ".mjs" = arquivo JavaScript de modulo (ES Module: usa import/export). Nao usa
-// nada do Vite nem do navegador: e Node puro (o fetch ja vem pronto no Node 18+).
+// ".mjs" = arquivo JavaScript de modulo (ES Module: usa import/export). E Node
+// puro (o fetch ja vem pronto no Node 18+), sem nada do Vite nem do navegador.
 // ============================================================================
 
 // SISTEMA_ALBERT = o "system prompt": as instrucoes fixas que mandamos pra IA
@@ -61,7 +65,7 @@ const SISTEMA_ALBERT = [
 ].join('\n')
 
 // montarPergunta: monta o texto que mandamos pra IA como se fosse a "fala do aluno"
-// Junta a pergunta dele com o CONTEXTO do exercicio (enunciado, codigo,tipo) 
+// Junta a pergunta dele com o CONTEXTO do exercicio (enunciado, codigo,tipo)
 // Isso serve para a IA saber do que ele esta falando.
 //
 // IMPORTANTE (seguranca): so mandamos enunciado/codigo/tipo, NUNCA o gabarito
@@ -132,14 +136,14 @@ async function callGemini({ pergunta, exercicio, apiKey, model }) {
 }
 
 // ---- Roteador --------------------------------------------------------------
-// responderAlbert = a porta de entrada deste arquivo (o que o plugin chama).
-// Decide QUAL IA usar (lendo o .env) e chama a funcao certa. Devolve um objeto
-// { texto, provider }.
+// responderAlbert = a porta de entrada deste arquivo (o que o plugin/Function chama).
+// Decide QUAL IA usar (lendo o env) e chama a funcao certa. Devolve { texto, provider }.
 //
 // env = process.env por padrao: "process.env" sao as variaveis de ambiente do processo Node
-// O plugin passa pra ca um env que MISTURA o do sistema com o q leu do server/.env (onde fica API_KEY).
+// Em dev o plugin passa um env que MISTURA o do sistema com o que leu do server/.env;
+// em producao, a Function passa o process.env do Azure (com as Application settings).
 export async function responderAlbert({ pergunta, exercicio }, env = process.env) {
-  // fornecedor vem do .env (IA_PROVIDER)
+  // fornecedor vem do env (IA_PROVIDER)
   // .toLowerCase() deixa tudo minusculo (aceita GEMINI, Gemini, gemini...).
   const provider = (env.IA_PROVIDER || 'gemini').toLowerCase()
 
@@ -151,11 +155,11 @@ export async function responderAlbert({ pergunta, exercicio }, env = process.env
   //  GEMINI_MODEL e opcional (callGemini tem um padrao).
   if (provider === 'gemini') {
     const apiKey = env.GEMINI_API_KEY
-    if (!apiKey) throw new Error('GEMINI_API_KEY ausente no server/.env')
+    if (!apiKey) throw new Error('GEMINI_API_KEY ausente (server/.env em dev, Application settings no Azure)')
     const texto = await callGemini({ pergunta, exercicio, apiKey, model: env.GEMINI_MODEL })
     return { texto, provider }
   }
-  // qualquer outro valor nao esta ligado aqui (ex.: 'claude' foi tirado). 
+  // qualquer outro valor nao esta ligado aqui (ex.: 'claude' foi tirado).
   // Pra adicionar outro fornecedor, cria uma funcao call<Nome> e um if igual ao do Gemini.
   throw new Error('IA_PROVIDER desconhecido: ' + provider)
 }

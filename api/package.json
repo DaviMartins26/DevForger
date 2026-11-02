@@ -1,0 +1,10 @@
+{
+  "name": "devforge-api",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Azure Functions (SWA) do DevForge - backend do chat do Albert",
+  "main": "src/functions/*.mjs",
+  "dependencies": {
+    "@azure/functions": "^4.5.1"
+  }
+}
