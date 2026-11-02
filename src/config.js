@@ -35,6 +35,7 @@ export const ERROS_PARA_DICA = 3
 
 // Numero de erros a partir do qual o jogo revela a resposta completa (o
 // feedbackErrado). Vem DEPOIS da dica: primeiro mostra a dica, so depois a resposta.
+// Isso provavelmente sera repovido pos MVP
 export const ERROS_PARA_RESPOSTA = 4
 
 // Mensagem de erro ao errar a resposta

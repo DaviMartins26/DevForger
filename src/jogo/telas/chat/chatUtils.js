@@ -18,6 +18,20 @@ export const AVATARES = {
   },
 }
 
+// ALBERT_ICON: o rosto do Albert (uma imagem so). Ele e "da gestao anterior",
+// por isso o estilo de arte e diferente - e piada da historia, nao um erro.
+export const ALBERT_ICON = '/chat/albert/icone.png'
+
+// formatarRecarga: recebe SEGUNDOS e devolve um texto "23h 59m 58s". Usada no
+// cronometro (mock) de recarga da energia do Albert.
+export function formatarRecarga(s) {
+  const h = Math.floor(s / 3600) // horas inteiras
+  const m = Math.floor((s % 3600) / 60) // o resto em minutos (% = resto da divisao)
+  const sec = s % 60 // o que sobra em segundos
+  const dois = (n) => String(n).padStart(2, '0') // sempre 2 digitos: 9 -> "09"
+  return `${h}h ${dois(m)}m ${dois(sec)}s`
+}
+
 // As tres listas abaixo sao falas da Lari, para a convesa ter um minimo de variacao.
 // A tela sorteia UMA frase de cada lista quando precisa (ver a funcao sortear).
 export const SAUDACOES = [

@@ -17,6 +17,7 @@ import { verificar, respostaInicial, temResposta } from '../exercicios/registro.
 // os numeros da dificuldade/pontuacao ficam todos no config.js (faceis de ajustar)
 import {
   VIDAS_INICIAIS,
+  ENERGIA_IA_INICIAL,
   ERROS_PARA_PERDER_VIDA,
   XP_BASE,
   XP_PENALIDADE_ERRO,
@@ -72,6 +73,8 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
   const [vidas, setVidas] = useState(VIDAS_INICIAIS)
   const [streak, setStreak] = useState(0)
   const [xpTotal, setXpTotal] = useState(0)
+  // Energia do chat com o Albert (moeda separada das vidas).
+  const [energiaIA, setEnergiaIA] = useState(ENERGIA_IA_INICIAL)
 
   // se o aluno concluiu a trilha (passou do ultimo exercicio)
   const [finalizado, setFinalizado] = useState(false)
@@ -138,6 +141,11 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
     setResultado(null)
   }
 
+  // gasta 1 de energia do chat com o Albert (nao mexe nas vidas)
+  function aoGastarEnergiaIA() {
+    setEnergiaIA((e) => Math.max(0, e - 1))
+  }
+
   // clicou Proximo: avanca; se era o ultimo, marca a trilha como concluida
   function aoAvancar() {
     if (ultimo) setFinalizado(true)
@@ -154,6 +162,7 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
     setDicaPedida(false)
     setConfirmandoDica(false)
     setVidas(VIDAS_INICIAIS)
+    setEnergiaIA(ENERGIA_IA_INICIAL)
     setStreak(0)
     setXpTotal(0)
     setFinalizado(false)
@@ -206,6 +215,8 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
       aoTentarDeNovo={aoTentarDeNovo}
       aoAvancar={aoAvancar}
       aoVoltar={aoVoltar}
+      energiaIA={energiaIA}
+      aoGastarEnergiaIA={aoGastarEnergiaIA}
     />
   )
 }

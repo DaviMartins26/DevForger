@@ -7,14 +7,15 @@
 // codigo e deixa a TelaChat mais curta.
 // ============================================================================
 
-import { AVATARES } from './chatUtils.js'
+import { AVATARES, ALBERT_ICON } from './chatUtils.js'
 
 // Avatar: mostra o rostinho de quem esta falando.
-// "de" diz quem fala ('lari' ou 'nos'); "humor" escolhe o rosto da Lari.
+// "de" diz quem fala ('lari', 'albert' ou 'nos'); "humor" escolhe o rosto da Lari.
 // O jogador ('nos') NAO tem rosto (decisao de design), por isso devolve null.
 export function Avatar({ de, humor }) {
   if (de === 'lari')
     return <img className="chat-avatar" src={AVATARES.lari[humor || 'normal']} alt="" />
+  if (de === 'albert') return <img className="chat-avatar" src={ALBERT_ICON} alt="" />
   return null
 }
 

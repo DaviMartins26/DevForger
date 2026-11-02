@@ -43,7 +43,7 @@ export default function App() {
     return <TelaCatalogo bloco={bloco} trilhas={trilhas} aoEscolher={setTrilhaId} />
   }
 
-  // 3) Intro da trilha (se existir e ainda nao foi vista nesta sessao).
+  // 3) Intro da trilha
   const intro = INTROS[trilha.id]
   if (intro && !introsVistas.has(trilha.id)) {
     // new Set(vistas).add(id) = cria um Set NOVO com o id a mais (nunca mexe no antigo)

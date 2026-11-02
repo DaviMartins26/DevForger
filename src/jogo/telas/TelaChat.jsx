@@ -15,8 +15,11 @@
 // ============================================================================
 
 import { CampoResposta } from '../../exercicios/registro.jsx'
+import { formatarRecarga } from './chat/chatUtils.js'
 import { Mensagem, IndicadorDigitando } from './chat/componentes.jsx'
+import { AlbertOverlay } from './chat/AlbertOverlay.jsx'
 import { useChatLari } from './chat/useChatLari.js'
+import { useAlbert } from './chat/useAlbert.js'
 
 export default function TelaChat({
   trilhaTitulo,
@@ -41,6 +44,8 @@ export default function TelaChat({
   aoAvancar,
   aoVoltar,
   aula,
+  energiaIA,
+  aoGastarEnergiaIA,
 }) {
   // Conversa com a Lari: o hook devolve as mensagens, se ela esta "digitando", a
   // marca do fim da lista (para rolar) e as acoes dos botoes.
@@ -57,6 +62,9 @@ export default function TelaChat({
     aoConfirmarDica,
     aoCancelarDica,
   })
+
+  // Chat de duvidas com o Albert (a IA): estado e acoes proprias, moeda propria (energiaIA).
+  const albert = useAlbert({ energiaIA, aoGastarEnergiaIA, exercicio })
 
   // "respondendo" e verdadeiro quando o aluno pode responder agora: ainda nao ha
   // resultado, nao estamos confirmando dica e a Lari nao esta digitando.
@@ -81,6 +89,11 @@ export default function TelaChat({
             </div>
             <div className="chat-hud">
               <span title="Vida (erros no exercicio)">❤️ {vidas}</span>
+              <span title="Energia (chat com o Albert)">⚡ {energiaIA}</span>
+              {/* o cronometro de recarga so aparece quando a energia esta abaixo do maximo */}
+              {albert.recargaSeg != null && (
+                <span title="Recarga da energia do Albert">🕒 {formatarRecarga(albert.recargaSeg)}</span>
+              )}
               <span title="Streak">🔥 {streak}</span>
               <span title="XP">✦ {xpTotal}</span>
             </div>
@@ -118,6 +131,14 @@ export default function TelaChat({
                   >
                     💡
                   </button>
+                  <button
+                    className="chat-btn-dica"
+                    onClick={albert.abrirDuvida}
+                    disabled={energiaIA <= 0}
+                    title={energiaIA <= 0 ? 'Sem energia para falar com o Albert' : 'Falar com o Albert (-1 energia)'}
+                  >
+                    🧓
+                  </button>
                   <button className="chat-btn-enviar" onClick={lari.enviar} disabled={!podeVerificar}>
                     Enviar ▶
                   </button>
@@ -154,6 +175,23 @@ export default function TelaChat({
           </footer>
         </div>
       </div>
+
+      {/* A janela do Albert so e desenhada quando foi aberta (albert.aberta). */}
+      {albert.aberta && (
+        <AlbertOverlay
+          energiaIA={energiaIA}
+          msgs={albert.msgs}
+          input={albert.input}
+          setInput={albert.setInput}
+          digitando={albert.digitando}
+          erro={albert.erro}
+          setErro={albert.setErro}
+          recargaSeg={albert.recargaSeg}
+          fimRef={albert.fimRef}
+          aoPerguntar={albert.enviarDuvida}
+          aoFechar={() => albert.setAberta(false)}
+        />
+      )}
     </div>
   )
 }
