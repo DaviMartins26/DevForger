@@ -20,12 +20,12 @@ export default function TelaCatalogo({ bloco, trilhas, aoEscolher }) {
           <li key={trilha.id} className="cat-card">
             <h3>
               {i + 1}. {trilha.titulo}{' '}
-              <small>({trilha.exercicios.length} exercicios)</small>
+              <small>({trilha.exercicios.length} exercícios)</small>
             </h3>
             <p>{trilha.descricao}</p>
             {/* ao clicar, avisa o App qual trilha foi escolhida (pelo id) */}
             <button type="button" className="df-primario" onClick={() => aoEscolher(trilha.id)}>
-              Comecar
+              Começar
             </button>
           </li>
         ))}

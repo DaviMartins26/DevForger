@@ -175,11 +175,12 @@ button:disabled {
 }
 /* .fio = a linha ja ligada (um <line> do SVG). stroke = a cor do traco. */
 .fio {
-  stroke: #666;
-  stroke-width: 2; /* espessura do traco */
+  stroke: var(--cyan); /* ciano do tema (antes era #666, cinza que sumia no fundo escuro) */
+  stroke-width: 3; /* espessura do traco */
 }
-/* .fio-arrasto = o fio que esta sendo puxado agora fica tracejado. */
+/* .fio-arrasto = o fio que esta sendo puxado agora: ambar tracejado, pra destacar. */
 .fio-arrasto {
+  stroke: var(--amber);
   stroke-dasharray: 5; /* desenha o traco "picotado" (5px traco, 5px vazio...) */
 }
 /* dentro do minigame, codigo e rotulos em fonte monoespacada (cara de codigo). */

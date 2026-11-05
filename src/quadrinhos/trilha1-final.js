@@ -31,10 +31,10 @@ export default {
       descricao: 'Jogador (azul) no podio sob holofote; o Chefe (sombra, visor e mao vermelhos) oferece a medalha.',
       baloes: [
         {
-          quem: 'chef', x: 53, y: 7, w: 19,
+          quem: 'chef', x: 74, y: 12, w: 20,
           texto: {
             // {xp} = pontuacao REAL do jogador (injetada pelo Jogo.jsx)
-            pt: '{xp} pontos. Um verdadeiro prodigio da IA.',
+            pt: '{xp} pontos. Um verdadeiro prodígio da IA.',
             en: '{xp} points. A true AI prodigy.',
           },
         },
@@ -46,9 +46,9 @@ export default {
       descricao: 'Jogador (azul) com a medalha de ouro; Lari (ambar) aplaude; confetes.',
       baloes: [
         {
-          quem: 'lari', x: 11, y: 6, w: 25,
+          quem: 'lari', x: 13, y: 16, w: 20,
           texto: {
-            pt: 'Voce conseguiu! Que orgulho!',
+            pt: 'Você conseguiu! Que orgulho!',
             en: 'You did it! So proud of you!',
           },
         },
@@ -60,9 +60,9 @@ export default {
       descricao: 'O Rival (verde, bracos cruzados, deboche) irrompe; jogador surpreso.',
       baloes: [
         {
-          quem: 'rival', x: 73, y: 7, w: 24,
+          quem: 'rival', x: 73, y: 13, w: 20,
           texto: {
-            pt: 'Prodigio? Que fofo. Eu fiz 1500.',
+            pt: 'Prodígio? Que fofo. Eu fiz 1500.',
             en: 'Prodigy? How cute. I scored 1500.',
           },
         },
@@ -74,9 +74,9 @@ export default {
       descricao: 'Placar holografico: 1500 (verde) e, menor, MAX 1160 (azul). Jogador aponta, incredulo.',
       baloes: [
         {
-          quem: 'nos', x: 74, y: 6, w: 22,
+          quem: 'nos', x: 73.5, y: 12, w: 20,
           texto: {
-            pt: '1500? Impossivel. O maximo da trilha e 1160!',
+            pt: '1500? Impossível. O máximo da trilha é 1160!',
             en: '1500? Impossible. The track maxes out at 1160!',
           },
         },
@@ -88,9 +88,9 @@ export default {
       descricao: 'O Chefe (sombra, visor e mao vermelhos) entrega a medalha ao Rival (verde). Jogador e Lari abatidos.',
       baloes: [
         {
-          quem: 'chef', x: 37, y: 6, w: 17,
+          quem: 'chef', x: 52, y: 10, w: 20,
           texto: {
-            pt: '1500 e maior que 1160. Maior e Maior. A condecoracao e dele.',
+            pt: '1500 é maior que 1160. Maior é Maior. A condecoração é dele.',
             en: '1500 is greater than 1160. Bigger is Bigger. The honor is his.',
           },
         },
@@ -102,9 +102,9 @@ export default {
       descricao: 'O Rival (verde) exibe a medalha e pisca zombando; jogador indignado.',
       baloes: [
         {
-          quem: 'rival', x: 19, y: 6, w: 26,
+          quem: 'rival', x: 21, y: 13, w: 20,
           texto: {
-            pt: 'Numeros sao numeros. Boa sorte na proxima, prodigio.',
+            pt: 'Números são números. Boa sorte na próxima, prodígio.',
             en: 'Numbers are numbers. Good luck next time, prodigy.',
           },
         },
@@ -116,10 +116,10 @@ export default {
       descricao: 'Corredor; jogador (azul) cabisbaixo; Lari (ambar) com a mao no ombro, encorajando.',
       baloes: [
         {
-          quem: 'lari', x: 52, y: 5, w: 22,
+          quem: 'lari', x: 76.5, y: 3 , w: 20,
           texto: {
-            pt: 'Nao foi justo, eu sei. Mas voce fez por merito. Ainda temos muito a aprender - e vamos superar aquele trapaceiro. Juntos.',
-            en: "It wasn't fair, I know. But you earned yours. We still have a lot to learn - and we'll outdo that cheater. Together.",
+            pt: 'Não foi justo, eu sei. Mas você fez por mérito. Ainda temos muito a aprender! E vamos superar aquele trapaceiro. Juntos.',
+            en: "It wasn't fair, I know. But you earned yours. We still have a lot to learn! And we'll outdo that cheater. Together.",
           },
         },
       ],

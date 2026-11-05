@@ -1,7 +1,8 @@
 // ============================================================================
 // App.jsx - Raiz da aplicacao
 // ----------------------------------------------------------------------------
-// Controla a navegacao entre as 4 "telas" grandes, uma de cada vez:
+// Controla a navegacao entre as "telas" grandes, uma de cada vez:
+//   0) INICIAL      - apresenta o projeto; o "Comecar" leva pra historia.
 //   1) ABERTURA     - quadrinho da lore (a Lari apresenta a DevForge).
 //   2) CATALOGO     - escolher a trilha (so a Trilha 1, por enquanto).
 //   3) INTRO        - quadrinho de abertura da trilha (antes do 1o exercicio).
@@ -13,6 +14,7 @@
 
 import { useState } from 'react'
 import Jogo from './jogo/Jogo.jsx'
+import TelaInicial from './jogo/telas/TelaInicial.jsx'
 import TelaCatalogo from './jogo/telas/TelaCatalogo.jsx'
 import Quadrinho from './quadrinhos/Quadrinho.jsx'
 import abertura from './quadrinhos/abertura.js'
@@ -26,12 +28,19 @@ const INTROS = { leitura: trilha1Intro }
 const FINAIS = { leitura: trilha1Final }
 
 export default function App() {
+  // comecou = se o aluno ja clicou "Comecar" na tela inicial de apresentacao
+  const [comecou, setComecou] = useState(false)
   const [viuAbertura, setViuAbertura] = useState(false)
   const [trilhaId, setTrilhaId] = useState(null) // null = nenhuma trilha escolhida
   // introsVistas = um Set com os ids das trilhas cuja intro ja foi vista nesta sessao
   const [introsVistas, setIntrosVistas] = useState(() => new Set())
   // acha o objeto da trilha escolhida (undefined enquanto nenhuma foi escolhida)
   const trilha = trilhas.find((t) => t.id === trilhaId)
+
+  // 0) Tela inicial: apresenta o projeto. "Comecar" leva pra historia (abertura).
+  if (!comecou) {
+    return <TelaInicial aoComecar={() => setComecou(true)} />
+  }
 
   // 1) Abertura da lore. Pular/Comecar leva ao catalogo.
   if (!viuAbertura) {

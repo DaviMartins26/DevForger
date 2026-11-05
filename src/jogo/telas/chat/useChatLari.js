@@ -140,7 +140,7 @@ export function useChatLari({
   // dicaNao: o aluno desistiu da dica.
   function dicaNao() {
     push('nos', 'Deixa, vou tentar sozinho.')
-    push('lari', 'Isso! Da mais uma olhada com calma.', undefined, 'normal')
+    push('lari', 'Isso! Dá mais uma olhada com calma.', undefined, 'normal')
     aoCancelarDica()
   }
 

@@ -77,18 +77,18 @@ export default function TelaChat({
           {/* CABECALHO: voltar, titulo da trilha e o HUD (vida, streak, XP) */}
           <header className="chat-top">
             {aoVoltar && (
-              <button className="chat-btn-ghost" onClick={aoVoltar} title="Voltar ao catalogo">
+              <button className="chat-btn-ghost" onClick={aoVoltar} title="Voltar ao catálogo">
                 ←
               </button>
             )}
             <div className="chat-top-titulo">
               <strong>Lari — DevForge</strong>
               <span>
-                {trilhaTitulo} · Exercicio {indice + 1}/{total}
+                {trilhaTitulo} · Exercício {indice + 1}/{total}
               </span>
             </div>
             <div className="chat-hud">
-              <span title="Vida (erros no exercicio)">❤️ {vidas}</span>
+              <span title="Vida (erros no exercício)">❤️ {vidas}</span>
               <span title="Energia (chat com o Albert)">⚡ {energiaIA}</span>
               {/* o cronometro de recarga so aparece quando a energia esta abaixo do maximo */}
               {albert.recargaSeg != null && (
@@ -127,7 +127,7 @@ export default function TelaChat({
                     className="chat-btn-dica"
                     onClick={lari.pedirDica}
                     disabled={dicaPedida}
-                    title={dicaPedida ? 'Dica ja usada neste exercicio' : 'Pedir dica da Lari (-1 vida)'}
+                    title={dicaPedida ? 'Dica já usada neste exercício' : 'Pedir dica da Lari (-1 vida)'}
                   >
                     💡
                   </button>

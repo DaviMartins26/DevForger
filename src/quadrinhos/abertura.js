@@ -19,7 +19,7 @@
 
 export default {
   id: 'abertura',
-  titulo: 'Abertura - Bem-vinda a DevForge',
+  titulo: 'Abertura - Bem-vindo à DevForge',
   quadros: [
     {
       id: 'q1',
@@ -27,9 +27,9 @@ export default {
       descricao: 'Lari no console da DevForge, apontando.',
       baloes: [
         {
-          quem: 'lari', x: 27, y: 11, w: 30,
+          quem: 'lari', x: 30, y: 15, w: 20,
           texto: {
-            pt: 'Bem-vinda a DevForge! Voce e a nossa mais nova IA em avaliacao.',
+            pt: 'Bem-vindo à DevForge! Você é a nossa mais nova IA em avaliação.',
             en: "Welcome to DevForge! You're our newest AI under evaluation.",
           },
         },
@@ -41,9 +41,9 @@ export default {
       descricao: 'Lari (direita) aponta para o jogador (azul) num pedestal holografico.',
       baloes: [
         {
-          quem: 'lari', x: 72, y: 8, w: 25,
+          quem: 'lari', x: 74, y: 8, w: 20,
           texto: {
-            pt: 'O trabalho e simples: provar que voce raciocina. Cada bateria de testes e uma trilha.',
+            pt: 'O trabalho é simples: provar que você raciocina. Cada bateria de testes é uma trilha.',
             en: 'The job is simple: prove you can reason. Each test battery is a track.',
           },
         },
@@ -55,10 +55,10 @@ export default {
       descricao: 'Lari aponta para um painel de System Health / energia (medidor 98.5%).',
       baloes: [
         {
-          quem: 'lari', x: 11, y: 11, w: 27,
+          quem: 'lari', x: 12, y: 13, w: 20,
           texto: {
-            pt: 'Voce comeca com vidas. Errar demais esgota elas - calma e capricho valem mais que pressa.',
-            en: 'You start with lives. Too many mistakes drain them - care beats rushing.',
+            pt: 'Você começa com vidas ❤️. Errar demais esgota elas, calma e capricho valem mais que pressa.',
+            en: 'You start with lives ❤️. Too many mistakes drain them, care beats rushing.',
           },
         },
       ],
@@ -69,51 +69,51 @@ export default {
       descricao: 'Lari pisca, lampada acesa, dedo em riste (a dica).',
       baloes: [
         {
-          quem: 'lari', x: 13, y: 11, w: 29,
+          quem: 'lari', x: 14, y: 14, w: 20,
           texto: {
-            pt: 'Travou? Me chama. Eu te dou uma dica... mas ela gasta 1 vida. Combinado?',
-            en: "Stuck? Call me. I'll give you a hint... but it costs 1 life. Deal?",
-          },
-        },
-      ],
-    },
-    {
-      id: 'q4b',
-      imagem: '/quadrinhos/intro/QuadroAlbert.jpeg',
-      descricao: 'Lari (direita) apresenta o Albert: um robo anciao de bronze, barbudo, meio adormecido, ao lado do jogador.',
-      baloes: [
-        {
-          quem: 'lari', x: 73, y: 9, w: 25,
-          texto: {
-            pt: 'Esse e o Albert... a aparencia dele e diferente porque ele e da gestao anterior. Mas o conhecimento e infinito: ele te ajuda - por um preco.',
-            en: "That's Albert... he looks different because he's from the previous management. But his knowledge is infinite: he can help you - for a price.",
+            pt: 'Travou? Me chama. Eu te dou uma dica... mas ela gasta 1 vida ❤️. Combinado?',
+            en: "Stuck? Call me. I'll give you a hint... but it costs 1 life ❤️. Deal?",
           },
         },
       ],
     },
     {
       id: 'q5',
-      imagem: '/quadrinhos/intro/Quadro5.jpeg',
-      descricao: 'Sombra do Chefe (vermelho); so a mao enorme no console e o visor. Jogador olhando para cima.',
+      imagem: '/quadrinhos/intro/QuadroAlbert.jpeg',
+      descricao: 'Lari (direita) apresenta o Albert: um robo anciao de bronze, barbudo, meio adormecido, ao lado do jogador.',
       baloes: [
         {
-          quem: 'chef', x: 10, y: 10, w: 34,
+          quem: 'lari', x: 73.5, y: 6.5, w: 20,
           texto: {
-            pt: 'Resultados. E so o que importa aqui.',
-            en: "Results. That's all that matters here.",
+            pt: 'Esse é o Albert... ele é diferente porque é da gestão anterior. Mas o conhecimento é infinito: ele te ajuda, por uma Energia ⚡.',
+            en: "That's Albert... he looks different because he's from the previous management. But his knowledge is infinite: he can help you, for a Energy ⚡.",
           },
         },
       ],
     },
     {
       id: 'q6',
+      imagem: '/quadrinhos/intro/Quadro5.jpeg',
+      descricao: 'Sombra do Chefe (vermelho); so a mao enorme no console e o visor. Jogador olhando para cima.',
+      baloes: [
+        {
+          quem: 'chef', x: 14, y: 13.5, w: 20,
+          texto: {
+            pt: 'Resultados. É só o que importa aqui. Quanto mais Alto Melhor',
+            en: "Results. That's all that matters here. The Higher the Better",
+          },
+        },
+      ],
+    },
+    {
+      id: 'q7',
       imagem: '/quadrinhos/intro/Quadro6.jpeg',
       descricao: 'Lari (direita) acena, tranquilizando; jogador (azul) ao lado.',
       baloes: [
         {
-          quem: 'lari', x: 9, y: 9, w: 42,
+          quem: 'lari', x: 20, y: 11.5, w: 20,
           texto: {
-            pt: 'Nao liga pra ele. Faz o teu melhor, de verdade. Bora?',
+            pt: 'Não liga pra ele. Faz o teu melhor, de verdade. Bora?',
             en: "Don't mind him. Just do your honest best. Shall we?",
           },
         },

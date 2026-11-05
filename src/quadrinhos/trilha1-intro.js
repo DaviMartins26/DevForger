@@ -10,7 +10,7 @@
 
 export default {
   id: 'trilha1-intro',
-  titulo: 'Trilha 1 - Leitura de Codigo',
+  titulo: 'Trilha 1 - Leitura de Código',
   quadros: [
     {
       id: 't1q1',
@@ -18,9 +18,9 @@ export default {
       descricao: 'Lari aponta para uma tela de codigo no console da DevForge.',
       baloes: [
         {
-          quem: 'lari', x: 27, y: 10, w: 27,
+          quem: 'lari', x: 28, y: 15, w: 20,
           texto: {
-            pt: 'Primeira trilha: Leitura de Codigo. Antes de escrever, aprenda a ler.',
+            pt: 'Primeira trilha: Leitura de Código. Antes de escrever, aprenda a ler.',
             en: 'First track: Reading Code. Before you write, learn to read.',
           },
         },
@@ -32,10 +32,10 @@ export default {
       descricao: 'Monitor grande exibindo um trecho de codigo (diagnostico de sistema).',
       baloes: [
         {
-          quem: 'lari', x: 8, y: 9, w: 27,
+          quem: 'lari', x: 9.5, y: 13, w: 20,
           texto: {
-            pt: 'Olhe o programa e preveja o que ele faz. Sem adivinhar - raciocine linha por linha.',
-            en: 'Look at the program and predict what it does. No guessing - reason line by line.',
+            pt: 'Olhe o programa e preveja o que ele faz. Sem adivinhar, raciocine linha por linha.',
+            en: 'Look at the program and predict what it does. No guessing, reason line by line.',
           },
         },
       ],
@@ -46,7 +46,7 @@ export default {
       descricao: 'O Rival (verde, sorriso debochado) espia por tras de um rack de servidores.',
       baloes: [
         {
-          quem: 'rival', x: 24, y: 9, w: 29,
+          quem: 'rival', x: 28, y: 18, w: 20,
           texto: {
             pt: 'Boa sorte. Vai precisar.',
             en: "Good luck. You'll need it.",

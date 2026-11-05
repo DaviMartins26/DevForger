@@ -44,7 +44,7 @@ export default function TelaExercicio({
       {/* so mostra o botao de voltar SE o App passou a funcao aoVoltar */}
       {aoVoltar && (
         <p>
-          <button type="button" onClick={aoVoltar}>&larr; Voltar ao catalogo</button>
+          <button type="button" onClick={aoVoltar}>&larr; Voltar ao catálogo</button>
         </p>
       )}
 
@@ -52,7 +52,7 @@ export default function TelaExercicio({
 
       {/* indicadores que acompanham o aluno pela trilha inteira */}
       <p>Vidas: {vidas} | Streak: {streak} | XP: {xpTotal}</p>
-      <p>Exercicio {indice + 1} de {total} - {exercicio.titulo}</p>
+      <p>Exercício {indice + 1} de {total} - {exercicio.titulo}</p>
 
       <h2>{exercicio.enunciado}</h2>
 
@@ -93,7 +93,7 @@ export default function TelaExercicio({
       {acertou && (
         <>
           <p className="ok">{exercicio.feedbackCerto}</p>
-          <p><button type="button" onClick={aoAvancar}>{ultimo ? 'Ver resultado' : 'Proximo'}</button></p>
+          <p><button type="button" onClick={aoAvancar}>{ultimo ? 'Ver resultado' : 'Próximo'}</button></p>
         </>
       )}
 

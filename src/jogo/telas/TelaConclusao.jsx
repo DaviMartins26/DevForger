@@ -10,13 +10,13 @@ export default function TelaConclusao({ xpTotal, vidas, aoRecomecar, aoVoltar })
   return (
     <main>
       <h1>DevForge</h1>
-      <h2>Trilha concluida!</h2>
-      <p>Voce chegou ao fim da trilha. Mandou bem!</p>
+      <h2>Trilha concluída!</h2>
+      <p>Você chegou ao fim da trilha. Mandou bem!</p>
       <p>XP final: {xpTotal}</p>
       <p>Vidas restantes: {vidas}</p>
       <p>
-        <button type="button" onClick={aoRecomecar}>Recomecar</button>{' '}
-        {aoVoltar && <button type="button" onClick={aoVoltar}>Voltar ao catalogo</button>}
+        <button type="button" onClick={aoRecomecar}>Recomeçar</button>{' '}
+        {aoVoltar && <button type="button" onClick={aoVoltar}>Voltar ao catálogo</button>}
       </p>
     </main>
   )

@@ -54,7 +54,7 @@ export function useAlbert({ energiaIA, aoGastarEnergiaIA, exercicio }) {
         {
           de: 'albert',
           texto:
-            'Eu sou o Albert. Pergunte sobre o exercicio ou sobre a linguagem - cada pergunta custa 1 de energia. Aviso: pergunta fora do assunto ou impropria gasta energia do mesmo jeito.',
+            'Eu sou o Albert. Pergunte sobre o exercício ou sobre a linguagem — cada pergunta custa 1 de energia. Aviso: pergunta fora do assunto ou imprópria gasta energia do mesmo jeito.',
         },
       ])
     }
@@ -66,7 +66,7 @@ export function useAlbert({ energiaIA, aoGastarEnergiaIA, exercicio }) {
   function enviarDuvida() {
     const q = input.trim() // tira espacos sobrando das pontas
     if (!q) {
-      setErro('Escreva sua duvida primeiro.')
+      setErro('Escreva sua dúvida primeiro.')
       return
     }
     if (energiaIA <= 0) {

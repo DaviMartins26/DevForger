@@ -22,8 +22,8 @@ function resumoExercicio(ex) {
 const MOCK_ABERTURAS = [
   'Boa pergunta, jovem aprendiz.',
   'Hmm. Deixa este velho circuito pensar...',
-  'Entendo tua duvida.',
-  'Ja processei muitos bugs em meus longos ciclos.',
+  'Entendo tua dúvida.',
+  'Já processei muitos bugs em meus longos ciclos.',
 ]
 function sortear(lista) {
   return lista[Math.floor(Math.random() * lista.length)]
@@ -34,9 +34,8 @@ function sortear(lista) {
 export function respostaMockAlbert() {
   return (
     sortear(MOCK_ABERTURAS) +
-    ' Acompanhe o codigo linha por linha e teste com um exemplo pequeno; costuma' +
-    ' revelar o ponto. (A IA de verdade esta offline agora - configure a chave em' +
-    ' server/.env para eu responder.)'
+    ' Acompanhe o código linha por linha e teste com um exemplo pequeno, costuma' +
+    ' revelar o ponto. (A IA de verdade está offline agora contate o suporte)'
   )
 }
 

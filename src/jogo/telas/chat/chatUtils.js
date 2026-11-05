@@ -35,22 +35,22 @@ export function formatarRecarga(s) {
 // As tres listas abaixo sao falas da Lari, para a convesa ter um minimo de variacao.
 // A tela sorteia UMA frase de cada lista quando precisa (ver a funcao sortear).
 export const SAUDACOES = [
-  'Bora comecar! Primeiro desafio:',
-  'Vamos nessa! Da uma olhada:',
-  'Comecando a trilha - primeira missao:',
-  'Preparada? Entao olha so:',
+  'Bora começar! Primeiro desafio:',
+  'Vamos nessa! Dá uma olhada:',
+  'Começando a trilha — primeira missão:',
+  'Preparada? Então olha só:',
 ]
 export const PONTES = [
-  'Boa, acertou mais uma! Agora o problema e:',
-  'Mandou bem! Proximo desafio:',
-  'Isso ai! Bora pro proximo:',
+  'Boa, acertou mais uma! Agora o problema é:',
+  'Mandou bem! Próximo desafio:',
+  'Isso aí! Bora pro próximo:',
   'Show de bola! Segura essa:',
   'Perfeito, mais um ponto! Agora essa:',
 ]
 export const PERDA_ENERGIA = [
   'Ih... essa custou 1 de vida. Bora com calma!',
-  'Opa, la se foi 1 de vida. Respira e tenta de novo.',
-  'Esse erro custou vida. Sem pressa, voce consegue.',
+  'Opa, lá se foi 1 de vida. Respira e tenta de novo.',
+  'Esse erro custou vida. Sem pressa, você consegue.',
 ]
 
 // resumirResposta: cada TIPO de exercicio guarda a resposta num formato diferente

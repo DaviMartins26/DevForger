@@ -10,8 +10,8 @@ import leitura from './logica/leitura.js'
 
 // dados do "bloco" mostrados no topo do catalogo
 export const bloco = {
-  titulo: 'Bloco de Logica de Programacao',
-  descricao: 'Trilhas de exercicios em Python, comecando pela leitura de codigo.',
+  titulo: 'Bloco de Lógica de Programação',
+  descricao: 'Trilhas de exercícios em Python, começando pela leitura de código.',
 }
 
 // a lista de trilhas do catalogo (a ordem aqui e a ordem na tela)
