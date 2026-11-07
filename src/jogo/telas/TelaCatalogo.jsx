@@ -6,7 +6,7 @@
 // clicada). Quem decide o que fazer com essa escolha e o App.
 // ============================================================================
 
-export default function TelaCatalogo({ bloco, trilhas, aoEscolher }) {
+export default function TelaCatalogo({ bloco, trilhas, trilhasBloqueadas = [], aoEscolher }) {
   return (
     <main>
       <h1>DevForge</h1>
@@ -27,6 +27,22 @@ export default function TelaCatalogo({ bloco, trilhas, aoEscolher }) {
             <button type="button" className="df-primario" onClick={() => aoEscolher(trilha.id)}>
               Começar
             </button>
+          </li>
+        ))}
+
+        {/* trilhas TRAVADAS: so vitrine (mostram o plano do bloco), sem botao de
+            jogar. A numeracao continua de onde as jogaveis pararam (por isso o
+            `trilhas.length + i + 1`). Dados sem id proprio -> a key usa o indice. */}
+        {trilhasBloqueadas.map((trilha, i) => (
+          <li key={`bloqueada-${i}`} className="cat-card travada">
+            <h3>
+              <span className="cat-tranca" aria-hidden="true">🔒</span>{' '}
+              {trilhas.length + i + 1}. {trilha.titulo}{' '}
+              <small>({trilha.nExercicios} exercícios)</small>
+            </h3>
+            <p>{trilha.descricao}</p>
+            {/* sem botao de "Começar": no lugar, uma etiqueta de "Em breve". */}
+            <span className="cat-embreve">Em breve</span>
           </li>
         ))}
       </ul>

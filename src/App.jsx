@@ -20,7 +20,7 @@ import Quadrinho from './quadrinhos/Quadrinho.jsx'
 import abertura from './quadrinhos/abertura.js'
 import trilha1Intro from './quadrinhos/trilha1-intro.js'
 import trilha1Final from './quadrinhos/trilha1-final.js'
-import { bloco, trilhas } from './trilhas/index.js'
+import { bloco, trilhas, trilhasBloqueadas } from './trilhas/index.js'
 
 // Intro de quadrinho por trilha (trilhaId -> roteiro), tocada ao "Comecar".
 const INTROS = { leitura: trilha1Intro }
@@ -49,7 +49,14 @@ export default function App() {
 
   // 2) Catalogo (enquanto nenhuma trilha foi escolhida).
   if (!trilha) {
-    return <TelaCatalogo bloco={bloco} trilhas={trilhas} aoEscolher={setTrilhaId} />
+    return (
+      <TelaCatalogo
+        bloco={bloco}
+        trilhas={trilhas}
+        trilhasBloqueadas={trilhasBloqueadas}
+        aoEscolher={setTrilhaId}
+      />
+    )
   }
 
   // 3) Intro da trilha

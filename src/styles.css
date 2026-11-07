@@ -120,6 +120,35 @@ button:disabled {
   color: var(--muted);
 }
 
+/* .cat-card.travada = trilha que ainda nao da pra jogar (so vitrine). Fica
+   apagada (opacity) e sem o brilho ciano no hover, pra deixar claro que nao e
+   clicavel - diferente do card jogavel. */
+.cat-card.travada {
+  opacity: 0.6;
+  border-color: rgba(53, 214, 232, 0.12);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+.cat-card.travada:hover {
+  border-color: rgba(53, 214, 232, 0.12);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+/* o cadeado antes do titulo da trilha travada. */
+.cat-tranca {
+  font-size: 0.95em;
+}
+/* .cat-embreve = a etiqueta no lugar do botao "Começar" (pilula apagada). */
+.cat-embreve {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 /* ==========================================================================
    Minigame de FIOS (tipo associacao): duas colunas + fios desenhados em SVG
    ========================================================================== */
