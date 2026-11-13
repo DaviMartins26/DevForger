@@ -19,7 +19,7 @@ export default function TelaInicial({ aoComecar }) {
         </p>
         <p>
           Autores: Davi Noel Martins Mundt, Giovani Tortato e Joshua Mendes.
-          Orientadora: Sofia Marshallowitz e Tiago Navarro.
+          Orientadores: Sofia Marshallowitz e Tiago Navarro.
         </p>
         <button type="button" className="df-primario" onClick={aoComecar}>
           Começar
